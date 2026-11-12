@@ -47,6 +47,8 @@ export default [
     route("settings", "routes/settings.tsx"),
     route("team", "routes/team.tsx"),
     route("redeem/:code", "routes/redeem.$code.tsx"),
+    // PROTOTYPE: Nudge copy voices (issue #5). Branch prototype/nudge-copy only.
+    route("prototype/nudge-copy", "routes/prototype.nudge-copy.tsx"),
   ]),
   route("signup", "routes/signup.tsx"),
   route("login", "routes/login.tsx"),
