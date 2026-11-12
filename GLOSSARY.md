@@ -102,3 +102,15 @@ _Avoid_: Notification, Reminder, Alert
 **Channel**:
 The way a Nudge reaches a Student: web push or email.
 _Avoid_: Medium, Transport
+
+**Studied**:
+A day on which a Student watched video in a course, completed a lesson in it, or submitted a quiz in it.
+_Avoid_: Active, Engaged
+
+**Ignored Nudge**:
+A Nudge after which the Student didn't Study that course before the next Nudge for it was due. Clicking it without Studying still counts as ignored.
+_Avoid_: Unopened, Unclicked
+
+**Quiet Hours**:
+The part of each day, in the Student's own time, when no Nudge is sent.
+_Avoid_: Do not disturb, Mute
