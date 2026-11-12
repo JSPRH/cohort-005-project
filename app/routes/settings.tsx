@@ -10,9 +10,10 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { UserRole, RefundStatus, users } from "~/db/schema";
+import { UserRole, RefundStatus, users, enrollments, courses } from "~/db/schema";
+import { NudgeSettingsPrototype } from "~/components/prototype-nudge-settings";
 import { AlertTriangle } from "lucide-react";
-import { data, isRouteErrorResponse, Link } from "react-router";
+import { data, isRouteErrorResponse, Link, useSearchParams } from "react-router";
 import { db } from "~/db";
 import { eq } from "drizzle-orm";
 import { formatPrice } from "~/lib/utils";
@@ -51,6 +52,14 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   const refundRequests = listRefundRequestsForBuyer(db, currentUserId);
 
+  // PROTOTYPE: Enrollments for the per-course Nudge mute variant
+  const enrolledCourses = db
+    .select({ id: courses.id, title: courses.title })
+    .from(enrollments)
+    .innerJoin(courses, eq(enrollments.courseId, courses.id))
+    .where(eq(enrollments.userId, currentUserId))
+    .all();
+
   return {
     user: {
       id: currentUser.id,
@@ -60,6 +69,7 @@ export async function loader({ request }: Route.LoaderArgs) {
       role: currentUser.role,
     },
     refundRequests,
+    enrolledCourses,
   };
 }
 
@@ -98,7 +108,8 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Settings({ loaderData }: Route.ComponentProps) {
-  const { user, refundRequests } = loaderData;
+  const { user, refundRequests, enrolledCourses } = loaderData;
+  const nudgeVariant = useSearchParams()[0].get("variant") ?? "A";
   const openCount = refundRequests.filter(
     (refundRequest) => refundRequest.status === RefundStatus.Open
   ).length;
@@ -187,6 +198,8 @@ export default function Settings({ loaderData }: Route.ComponentProps) {
           </fetcher.Form>
         </CardContent>
       </Card>
+
+      <NudgeSettingsPrototype variant={nudgeVariant} courses={enrolledCourses} />
 
       {refundRequests.length > 0 && (
         <Card className="mt-8 max-w-md">

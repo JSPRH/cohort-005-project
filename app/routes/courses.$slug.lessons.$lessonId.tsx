@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { Link, useFetcher, useNavigate } from "react-router";
+import { Link, useFetcher, useNavigate, useSearchParams } from "react-router";
+import { NudgeOptInPrototype } from "~/components/prototype-nudge-optin";
 import { toast } from "sonner";
 import type { Route } from "./+types/courses.$slug.lessons.$lessonId";
 import { getCurrentUserId } from "~/lib/session";
@@ -1044,6 +1045,7 @@ export default function LessonViewer({ loaderData }: Route.ComponentProps) {
 
   const isCompleted =
     lessonStatus === LessonProgressStatus.Completed || justCompleted;
+  const optin = useSearchParams()[0].get("optin");
 
   // Navigate to next lesson after marking complete
   useEffect(() => {
@@ -1237,6 +1239,19 @@ export default function LessonViewer({ loaderData }: Route.ComponentProps) {
                   </Button>
                 </fetcher.Form>
               )}
+            </div>
+          )}
+
+          {/* PROTOTYPE: Nudge opt-in after the Student's first completed lesson */}
+          {optin === "B" && (
+            <div className="mb-8">
+              {!isCompleted && (
+                <p className="text-xs text-fuchsia-600">
+                  (prototype: shows after the first lesson is completed; shown
+                  here regardless)
+                </p>
+              )}
+              <NudgeOptInPrototype variant="B" courseTitle={course.title} />
             </div>
           )}
 

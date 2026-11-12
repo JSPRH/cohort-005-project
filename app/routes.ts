@@ -48,6 +48,9 @@ export default [
     route("team", "routes/team.tsx"),
     route("redeem/:code", "routes/redeem.$code.tsx"),
   ]),
+  // PROTOTYPE routes: never merge to main
+  route("prototype/nudge-optin", "routes/prototype.nudge-optin.ts"),
+  route("prototype/nudge-unsubscribe", "routes/prototype.nudge-unsubscribe.tsx"),
   route("signup", "routes/signup.tsx"),
   route("login", "routes/login.tsx"),
   route("api/switch-user", "routes/api.switch-user.ts"),

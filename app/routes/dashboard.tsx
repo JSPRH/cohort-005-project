@@ -1,4 +1,5 @@
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
+import { NudgeOptInPrototype } from "~/components/prototype-nudge-optin";
 import type { Route } from "./+types/dashboard";
 import { db } from "~/db";
 import {
@@ -270,6 +271,7 @@ export function HydrateFallback() {
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
   const { inProgressCourses, completedCourses } = loaderData;
   const totalCourses = inProgressCourses.length + completedCourses.length;
+  const optin = useSearchParams()[0].get("optin");
 
   return (
     <div className="mx-auto max-w-7xl p-6 lg:p-8">
@@ -288,6 +290,14 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
           Track your learning progress
         </p>
       </div>
+
+      {/* PROTOTYPE: push offered after the Student clicks through from an email Nudge */}
+      {optin === "C" && (
+        <NudgeOptInPrototype
+          variant="C"
+          courseTitle={inProgressCourses[0]?.courseTitle ?? "your course"}
+        />
+      )}
 
       {totalCourses === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">

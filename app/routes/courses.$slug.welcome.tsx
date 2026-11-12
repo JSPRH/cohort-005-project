@@ -1,4 +1,5 @@
-import { Link, redirect } from "react-router";
+import { Link, redirect, useSearchParams } from "react-router";
+import { NudgeOptInPrototype } from "~/components/prototype-nudge-optin";
 import type { Route } from "./+types/courses.$slug.welcome";
 import { db } from "~/db";
 import {
@@ -128,6 +129,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
 export default function Welcome({ loaderData }: Route.ComponentProps) {
   const { course, discordInviteUrl } = loaderData;
+  const optin = useSearchParams()[0].get("optin");
 
   const firstLessonId =
     course.modules.length > 0 && course.modules[0].lessons.length > 0
@@ -148,6 +150,10 @@ export default function Welcome({ loaderData }: Route.ComponentProps) {
           <p className="mb-8 text-lg text-muted-foreground">
             You&apos;re officially enrolled. Here&apos;s how to get started.
           </p>
+
+          {optin === "A" && (
+            <NudgeOptInPrototype variant="A" courseTitle={course.title} />
+          )}
 
           <div className="space-y-4">
             {discordInviteUrl && (
