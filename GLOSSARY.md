@@ -100,7 +100,7 @@ A message sent to a Student to bring them back to a course they're Enrolled on, 
 _Avoid_: Notification, Reminder, Alert
 
 **Channel**:
-The way a Nudge reaches a Student: web push or email.
+The way a Nudge reaches a Student: web push or email. A Student turns each Channel on or off, and a Nudge only goes by a Channel that's on.
 _Avoid_: Medium, Transport
 
 **Studied**:
