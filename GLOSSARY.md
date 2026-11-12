@@ -111,6 +111,10 @@ _Avoid_: Active, Engaged
 A Nudge after which the Student didn't Study that course before the next Nudge for it was due. Clicking it without Studying still counts as ignored.
 _Avoid_: Unopened, Unclicked
 
+**Answered Nudge**:
+A Nudge after which the Student Studied that course within 48 hours, and before any later Nudge for the same course. Clicking it doesn't make it answered.
+_Avoid_: Converted, Successful, Clicked
+
 **Quiet Hours**:
 The part of each day, in the Student's own time, when no Nudge is sent.
 _Avoid_: Do not disturb, Mute
