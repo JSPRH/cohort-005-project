@@ -2003,6 +2003,41 @@ This course is still in draft while the cluster examples are rewritten against t
     `Created ${countRows(schema.comments)} lesson comments across ${countRows(schema.comments, isNull(schema.comments.parentId))} threads.`
   );
 
+  // ─── Bookmarks and Notes ───
+  // Private to the Student who made them, so /saved has something to list.
+  // Only enrolled students bookmark or note.
+
+  db.insert(schema.bookmarks)
+    .values([
+      { userId: students[0].id, lessonId: course1LessonIds[2], createdAt: daysAgo(30) },
+      { userId: students[0].id, lessonId: course2LessonIds[4], createdAt: daysAgo(6) },
+      { userId: students[2].id, lessonId: course1LessonIds[1], createdAt: daysAgo(20) },
+    ])
+    .run();
+
+  db.insert(schema.notes)
+    .values([
+      {
+        userId: students[0].id,
+        lessonId: course1LessonIds[2],
+        body: "Use npx tsc so the compiler version stays pinned to the project.",
+        createdAt: daysAgo(30),
+        updatedAt: daysAgo(30),
+      },
+      {
+        userId: students[0].id,
+        lessonId: course2LessonIds[2],
+        body: "201 for created, 204 for no body.\n# and * stay as typed — Notes are plain text.",
+        createdAt: daysAgo(12),
+        updatedAt: daysAgo(3),
+      },
+    ])
+    .run();
+
+  console.log(
+    `Created ${countRows(schema.bookmarks)} bookmarks and ${countRows(schema.notes)} notes.`
+  );
+
   // ─── Lesson Progress ───
 
   // Helper to mark lessons as complete

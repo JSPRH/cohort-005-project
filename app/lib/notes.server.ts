@@ -3,7 +3,7 @@ import * as schema from "~/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 import { courses, lessons, modules, notes } from "~/db/schema";
 import { savedLessonColumns } from "~/lib/saved-lesson.server";
-import { MAX_NOTE_LENGTH } from "~/lib/notes";
+import { noteBodySchema } from "~/lib/notes";
 
 // ─── Notes ───
 // A Student's own writing about a Lesson, private to the Student who wrote it.
@@ -46,16 +46,11 @@ export function saveNote(
   body: string,
   now: Date
 ): SaveNoteResult {
-  const trimmed = body.trim();
-  if (trimmed.length === 0) {
-    return { ok: false, error: "Write something before saving your note" };
+  const parsed = noteBodySchema.safeParse(body);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0].message };
   }
-  if (trimmed.length > MAX_NOTE_LENGTH) {
-    return {
-      ok: false,
-      error: `Note must be ${MAX_NOTE_LENGTH} characters or fewer`,
-    };
-  }
+  const trimmed = parsed.data;
 
   const at = now.toISOString();
   const note = db

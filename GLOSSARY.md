@@ -125,3 +125,8 @@ A Student's own writing about a Lesson, private to the Student who wrote it.
 One per Student per Lesson. A Note is not a Comment — a Comment is addressed
 to other people, a Note is addressed to nobody.
 _Avoid_: Annotation, scratchpad, memo
+
+**Saved page**:
+The page at `/saved` that lists a Student's own Bookmarks and Notes, each
+linking back to its Lesson. "Saved" names the page, not the things on it — a
+row is a Bookmark or a Note, never a "saved item".

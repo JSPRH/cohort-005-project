@@ -13,7 +13,7 @@ import {
 import { defaultNotifications } from "~/lib/notifications.server";
 import { isBookmarked, toggleBookmark } from "~/lib/bookmarks.server";
 import { getNote, saveNote } from "~/lib/notes.server";
-import { MAX_NOTE_LENGTH } from "~/lib/notes";
+import { noteBodySchema } from "~/lib/notes";
 import {
   CommentThread,
   type RenderedComment,
@@ -90,14 +90,7 @@ const editCommentSchema = z.object({
 });
 
 const saveNoteSchema = z.object({
-  body: z
-    .string()
-    .trim()
-    .min(1, "Write something before saving your note.")
-    .max(
-      MAX_NOTE_LENGTH,
-      `Your note is over ${MAX_NOTE_LENGTH.toLocaleString("en")} characters, so it was not saved.`
-    ),
+  body: noteBodySchema,
 });
 
 const deleteCommentSchema = z.object({
@@ -1352,7 +1345,7 @@ function LessonNote({
       <CardContent className="space-y-3 pt-6">
         <div className="flex items-center gap-2">
           <NotebookPen className="size-4 text-muted-foreground" />
-          <h2 className="font-semibold">Your notes</h2>
+          <h2 className="font-semibold">Your note</h2>
         </div>
 
         <fetcher.Form method="post" className="space-y-3">
@@ -1361,6 +1354,7 @@ function LessonNote({
           <Textarea
             name="body"
             rows={6}
+            key={note?.updatedAt}
             defaultValue={note?.body ?? ""}
             placeholder="Only you can read this."
             className="resize-y"
