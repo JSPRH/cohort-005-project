@@ -12,6 +12,7 @@ import { getCurrentUserId, getDevCountry } from "~/lib/session";
 import { getCountryTierInfo, COUNTRIES } from "~/lib/ppp";
 import { eq, and, or, sql, desc } from "drizzle-orm";
 import { db } from "~/db";
+import { listDevUsers } from "~/lib/dev-users.server";
 import {
   users,
   courses,
@@ -23,10 +24,6 @@ import {
   TeamMemberRole,
   LessonProgressStatus,
 } from "~/db/schema";
-
-function getAllUsers() {
-  return db.select().from(users).all();
-}
 
 function getUserById(id: number) {
   return db.select().from(users).where(eq(users.id, id)).get();
@@ -177,7 +174,7 @@ function getRecentlyProgressedCourses(userId: number, limit = 3) {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const users = getAllUsers();
+  const users = listDevUsers(db);
   const currentUserId = await getCurrentUserId(request);
   const currentUser = currentUserId ? getUserById(currentUserId) : null;
   const devCountry = await getDevCountry(request);
@@ -208,7 +205,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     : [];
 
   return {
-    users: users.map((u) => ({ id: u.id, name: u.name, role: u.role })),
+    users,
     currentUser: currentUser
       ? {
           id: currentUser.id,

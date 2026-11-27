@@ -24,11 +24,8 @@ import { getCurrentUserId, getDevCountry } from "~/lib/session";
 import { getCountryTierInfo, COUNTRIES } from "~/lib/ppp";
 import { eq, like, and, or, sql } from "drizzle-orm";
 import { db } from "~/db";
+import { listDevUsers } from "~/lib/dev-users.server";
 import { courses, categories, users, modules, lessons } from "~/db/schema";
-
-function getAllUsers() {
-  return db.select().from(users).all();
-}
 
 function getUserById(id: number) {
   return db.select().from(users).where(eq(users.id, id)).get();
@@ -142,7 +139,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     lessonCount: getLessonCountForCourse(course.id),
   }));
   const categories = getAllCategories();
-  const users = getAllUsers();
+  const users = listDevUsers(db);
   const currentUserId = await getCurrentUserId(request);
   const currentUser = currentUserId ? getUserById(currentUserId) : null;
   const devCountry = await getDevCountry(request);
@@ -152,7 +149,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     featuredCourses: featured,
     totalCourses: courses.length,
     totalCategories: categories.length,
-    users: users.map((u) => ({ id: u.id, name: u.name, role: u.role })),
+    users,
     currentUser: currentUser
       ? { id: currentUser.id, name: currentUser.name, role: currentUser.role }
       : null,
